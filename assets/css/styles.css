@@ -437,7 +437,11 @@ details.acc .acc-body li { margin-bottom: 0.3rem; }
   color: #fff; text-align: center;
 }
 .cta-band h2 { color: #fff; font-size: clamp(1.9rem, 4.4vw, 2.8rem); }
-.cta-band p { color: var(--text-ondark-muted); max-width: 56ch; margin-inline: auto 1.4rem; }
+/* Was: margin-inline: auto 1.4rem. margin-inline takes start/end, not
+   top/bottom, so that set margin-left:auto and margin-right:1.4rem and
+   pushed this block to the right. The intent was a centred block with a
+   1.4rem gap below, which is what the margin shorthand below does. */
+.cta-band p { color: var(--text-ondark-muted); max-width: 56ch; margin: 0 auto 1.4rem; }
 
 /* -------------------- Footer -------------------- */
 .site-footer { background: #08070b; color: var(--text-ondark-muted); padding-block: clamp(2.6rem, 5vw, 3.6rem) 2rem; border-top: 1px solid rgba(201,162,39,0.25); }

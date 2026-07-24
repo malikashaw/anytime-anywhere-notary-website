@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quote Calculator | Anytime Anywhere Mobile Notary Services LLC</title>
+  <meta name="description" content="Private internal quoting tool.">
+
+  <!-- This page is private. Keep it out of search results and out of the sitemap. -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="theme-color" content="#0b0a0f">
+
+  <link rel="icon" type="image/x-icon" href="assets/images/favicon/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/quote-calculator.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- Same header as the public site. -->
+<header class="site-header">
+  <div class="container">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="index.html" aria-label="Anytime Anywhere Mobile Notary Services LLC home">
+        <picture><source srcset="assets/images/logo-hero.webp" type="image/webp"><img src="assets/images/logo-hero.png" alt="Anytime Anywhere Mobile Notary Services LLC logo" width="120" height="80" decoding="async"></picture>
+        <span class="brand-name">Anytime Anywhere<span>Mobile Notary &amp; Signing</span></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
+        <span></span>
+      </button>
+      <div class="nav-menu" id="nav-menu">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="service-areas.html">Service Areas</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="faq.html">FAQs</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="nav-cta">
+          <a class="btn btn-gold" href="contact.html#appointment">Request an Appointment</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="qc-privatebar qc-noprint">
+  <div class="container">
+    <span class="qc-badge">Private internal tool</span>
+    <span class="qc-meta">Pricing schedule v<span id="qcSchedVersion">1.0</span>, effective <span id="qcSchedDate">2026-07-23</span></span>
+  </div>
+</div>
+
+<nav class="qc-tabs qc-noprint" aria-label="Calculator sections">
+  <div class="container" role="tablist">
+    <button class="qc-tab" role="tab" aria-selected="true"  aria-controls="panelQuote"     id="tabQuote"     type="button">New Quote</button>
+    <button class="qc-tab" role="tab" aria-selected="false" aria-controls="panelSaved"     id="tabSaved"     type="button">Saved Quotes</button>
+    <button class="qc-tab" role="tab" aria-selected="false" aria-controls="panelDashboard" id="tabDashboard" type="button">Dashboard</button>
+    <button class="qc-tab" role="tab" aria-selected="false" aria-controls="panelAdmin"     id="tabAdmin"     type="button">Pricing Settings</button>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ==================================================================
+     PANEL 1: NEW QUOTE
+     ================================================================== -->
+<section class="section section--tight" id="panelQuote" role="tabpanel" aria-labelledby="tabQuote">
+  <div class="container">
+
+    <div id="qcReviewBanner"></div>
+
+    <form id="qcForm" novalidate>
+
+      <!-- ---------------- 1. Client information ---------------- -->
+      <details class="qc-section" open>
+        <summary>Client information<span class="qc-summary-tag">Optional</span></summary>
+        <div class="qc-body">
+          <p class="qc-note qc-note-info">None of these fields are required to calculate a price. Fill in only what you need for the written quote.</p>
+          <div class="qc-grid">
+            <div class="qc-field"><label for="cliName">Client name</label><input type="text" id="cliName" autocomplete="name"></div>
+            <div class="qc-field"><label for="cliPhone">Client phone</label><input type="tel" id="cliPhone" autocomplete="tel" inputmode="tel"></div>
+            <div class="qc-field"><label for="cliEmail">Client email</label><input type="email" id="cliEmail" autocomplete="email" inputmode="email"></div>
+            <div class="qc-field"><label for="apptDate">Appointment date</label><input type="date" id="apptDate"></div>
+            <div class="qc-field"><label for="apptTime">Appointment time</label><input type="time" id="apptTime"></div>
+            <div class="qc-field"><label for="leadSource">Lead source</label>
+              <select id="leadSource">
+                <option value="">Not recorded</option>
+                <option>Google Business Profile</option>
+                <option>Website</option>
+                <option>Referral partner</option>
+                <option>Past client</option>
+                <option>Directory listing</option>
+                <option>Social media</option>
+                <option>Walk up or sign</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="qc-field qc-full"><label for="apptAddress">Appointment address</label><input type="text" id="apptAddress" autocomplete="street-address"></div>
+            <div class="qc-field qc-full"><label for="destAddress">Destination or return delivery address</label><input type="text" id="destAddress"></div>
+            <div class="qc-field qc-full"><label for="cliNotes">Notes</label><textarea id="cliNotes" rows="3"></textarea></div>
+          </div>
+          <p class="qc-note qc-note-warn">Do not enter identification numbers, Social Security numbers, passport numbers, or financial account numbers anywhere in this tool.</p>
+        </div>
+      </details>
+
+      <!-- ---------------- 2. Primary service ---------------- -->
+      <details class="qc-section" open>
+        <summary>Primary service</summary>
+        <div class="qc-body">
+          <div class="qc-grid qc-1">
+            <div class="qc-field">
+              <label for="service">Requested service</label>
+              <select id="service"></select>
+              <span class="qc-hint" id="serviceHint"></span>
+            </div>
+            <div class="qc-field" id="customServiceWrap" hidden>
+              <label for="customServiceAmount">Custom service amount</label>
+              <input type="number" id="customServiceAmount" min="0" step="0.01" inputmode="decimal" placeholder="0.00">
+              <span class="qc-hint">Use this when a service has no established price yet.</span>
+            </div>
+            <div class="qc-field" id="customServiceLabelWrap" hidden>
+              <label for="customServiceLabel">Describe the custom service</label>
+              <input type="text" id="customServiceLabel">
+            </div>
+          </div>
+          <p class="qc-note qc-note-info">Loan signing services are quoted only as attorney supervised assignments. This business does not provide legal advice and does not independently conduct Georgia real estate closings.</p>
+        </div>
+      </details>
+
+      <!-- ---------------- 3. Travel and mileage ---------------- -->
+      <details class="qc-section">
+        <summary>Travel and mileage<span class="qc-summary-tag" id="tagTravel"></span></summary>
+        <div class="qc-body">
+          <div class="qc-grid">
+            <div class="qc-field">
+              <label for="travelMode">How are you measuring travel?</label>
+              <select id="travelMode">
+                <option value="miles">One-way mileage from your starting location</option>
+                <option value="custom">Custom travel fee</option>
+              </select>
+            </div>
+            <div class="qc-field" hidden>
+              <label for="travelMeasurement">Distance is measured</label>
+              <select id="travelMeasurement">
+                <option value="one_way">One way</option>
+                <option value="round_trip">Round trip</option>
+              </select>
+            </div>
+            <div class="qc-field" id="zoneWrap" hidden>
+              <label for="travelZone">Travel zone (retired)</label>
+              <select id="travelZone"></select>
+            </div>
+            <div class="qc-field" id="milesWrap">
+              <label for="travelMiles">One-way distance from business starting location</label>
+              <input type="number" id="travelMiles" min="0" step="0.1" inputmode="decimal" value="0">
+              <span class="qc-hint">First 15 one-way miles are included. Each additional one-way mile is $2.00. Decimals are allowed.</span>
+            </div>
+            <div class="qc-field qc-full">
+              <label for="travelOverride">Manual travel override (optional)</label>
+              <input type="number" id="travelOverride" min="0" step="0.01" inputmode="decimal" placeholder="Leave blank to use the automatic calculation">
+            </div>
+            <div class="qc-field qc-full">
+              <label for="travelOverrideReason">Reason for the travel override</label>
+              <input type="text" id="travelOverrideReason">
+              <span class="qc-hint">Required whenever you use the override.</span>
+            </div>
+            <div class="qc-field" id="customTravelWrap" hidden>
+              <label for="travelCustom">Custom travel fee</label>
+              <input type="number" id="travelCustom" min="0" step="0.01" inputmode="decimal" value="0">
+            </div>
+            <div class="qc-field">
+              <label for="travelStops">Additional stops or destinations</label>
+              <div class="qc-stepper"><button type="button" data-step="travelStops" data-dir="-1" aria-label="Decrease">&minus;</button><input type="number" id="travelStops" min="0" step="1" value="0" inputmode="numeric"><button type="button" data-step="travelStops" data-dir="1" aria-label="Increase">+</button></div>
+            </div>
+            <div class="qc-field"><label for="travelParking">Parking cost</label><input type="number" id="travelParking" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="travelTolls">Tolls</label><input type="number" id="travelTolls" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="travelValet">Valet</label><input type="number" id="travelValet" min="0" step="0.01" inputmode="decimal" value="0"></div>
+          </div>
+          <label class="qc-check"><input type="checkbox" id="travelReturnTrip"><span>Return trip required</span></label>
+          <p class="qc-note qc-note-info">Parking, tolls, and valet are shown to the client as pass through costs, separate from your service fees.</p>
+        </div>
+      </details>
+
+      <!-- ---------------- 4. Documents, signers, acts ---------------- -->
+      <details class="qc-section">
+        <summary>Documents, signers and notarial acts<span class="qc-summary-tag" id="tagCounts"></span></summary>
+        <div class="qc-body">
+          <p class="qc-note qc-note-warn">Documents, signers, signatures and notarial acts are four different counts. A single document can carry several notarial acts, and several documents can carry one.</p>
+          <div class="qc-grid">
+            <div class="qc-field"><label for="cntDocuments">Number of documents</label>
+              <div class="qc-stepper"><button type="button" data-step="cntDocuments" data-dir="-1" aria-label="Decrease">&minus;</button><input type="number" id="cntDocuments" min="0" step="1" value="1" inputmode="numeric"><button type="button" data-step="cntDocuments" data-dir="1" aria-label="Increase">+</button></div>
+            </div>
+            <div class="qc-field"><label for="cntSigners">Number of signers</label>
+              <div class="qc-stepper"><button type="button" data-step="cntSigners" data-dir="-1" aria-label="Decrease">&minus;</button><input type="number" id="cntSigners" min="0" step="1" value="1" inputmode="numeric"><button type="button" data-step="cntSigners" data-dir="1" aria-label="Increase">+</button></div>
+            </div>
+            <div class="qc-field"><label for="cntActs">Notarized signatures or notarial acts</label>
+              <div class="qc-stepper"><button type="button" data-step="cntActs" data-dir="-1" aria-label="Decrease">&minus;</button><input type="number" id="cntActs" min="0" step="1" value="1" inputmode="numeric"><button type="button" data-step="cntActs" data-dir="1" aria-label="Increase">+</button></div>
+              <span class="qc-hint">The Georgia notarial fee is charged per act.</span>
+            </div>
+            <div class="qc-field"><label for="cntStamps">Number of stamps or seals</label>
+              <div class="qc-stepper"><button type="button" data-step="cntStamps" data-dir="-1" aria-label="Decrease">&minus;</button><input type="number" id="cntStamps" min="0" step="1" value="1" inputmode="numeric"><button type="button" data-step="cntStamps" data-dir="1" aria-label="Increase">+</button></div>
+              <span class="qc-hint">Recorded for your notes. Not billed separately.</span>
+            </div>
+            <div class="qc-field"><label for="cntWitnessReq">Witnesses the document requires</label>
+              <div class="qc-stepper"><button type="button" data-step="cntWitnessReq" data-dir="-1" aria-label="Decrease">&minus;</button><input type="number" id="cntWitnessReq" min="0" step="1" value="0" inputmode="numeric"><button type="button" data-step="cntWitnessReq" data-dir="1" aria-label="Increase">+</button></div>
+            </div>
+            <div class="qc-field"><label for="cntWitnessProv">Witnesses you must provide</label>
+              <div class="qc-stepper"><button type="button" data-step="cntWitnessProv" data-dir="-1" aria-label="Decrease">&minus;</button><input type="number" id="cntWitnessProv" min="0" step="1" value="0" inputmode="numeric"><button type="button" data-step="cntWitnessProv" data-dir="1" aria-label="Increase">+</button></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- ---------------- 5. Timing ---------------- -->
+      <details class="qc-section">
+        <summary>Appointment timing and urgency<span class="qc-summary-tag" id="tagTiming"></span></summary>
+        <div class="qc-body">
+          <div class="qc-grid">
+            <div class="qc-field"><label for="timing">Time of appointment</label><select id="timing"></select></div>
+            <div class="qc-field"><label for="urgency">How soon is it needed?</label><select id="urgency"></select></div>
+            <div class="qc-field"><label for="customTimingFee">Custom timing fee</label><input type="number" id="customTimingFee" min="0" step="0.01" inputmode="decimal" value="0"></div>
+          </div>
+          <div id="timingNotice"></div>
+        </div>
+      </details>
+
+      <!-- ---------------- 6. Location ---------------- -->
+      <details class="qc-section">
+        <summary>Appointment location<span class="qc-summary-tag" id="tagLocation"></span></summary>
+        <div class="qc-body">
+          <div class="qc-grid">
+            <div class="qc-field qc-full"><label for="locationType">Location type</label><select id="locationType"></select></div>
+            <div class="qc-field"><label for="facName">Facility name</label><input type="text" id="facName"></div>
+            <div class="qc-field"><label for="facRoom">Room number</label><input type="text" id="facRoom"></div>
+            <div class="qc-field"><label for="facPatient">Patient or resident name</label><input type="text" id="facPatient"></div>
+            <div class="qc-field qc-full"><label for="facAccess">Facility access instructions</label><textarea id="facAccess" rows="2"></textarea></div>
+            <div class="qc-field qc-full"><label for="facNotes">Special appointment notes</label><textarea id="facNotes" rows="2"></textarea></div>
+          </div>
+          <label class="qc-check"><input type="checkbox" id="facSecurityDelay"><span>Expect a security or check in delay</span></label>
+          <div id="locationNotice"></div>
+        </div>
+      </details>
+
+      <!-- ---------------- 7. Waiting time ---------------- -->
+      <details class="qc-section">
+        <summary>Waiting time<span class="qc-summary-tag" id="tagWaiting"></span></summary>
+        <div class="qc-body">
+          <p class="qc-note qc-note-info">Waiting time is charged only after the included appointment time in your pricing policy has passed. The included time is shown below and is editable in the pricing settings.</p>
+          <div class="qc-grid">
+            <div class="qc-field"><label for="waitIncluded">Included appointment time (minutes)</label><input type="number" id="waitIncluded" readonly></div>
+            <div class="qc-field"><label for="waitTotal">Total time on site (minutes)</label>
+              <div class="qc-stepper"><button type="button" data-step="waitTotal" data-dir="-15" aria-label="Decrease">&minus;</button><input type="number" id="waitTotal" min="0" step="5" value="0" inputmode="numeric"><button type="button" data-step="waitTotal" data-dir="15" aria-label="Increase">+</button></div>
+            </div>
+            <div class="qc-field"><label for="customDelayFee">Custom delay fee</label><input type="number" id="customDelayFee" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="waitReason">Reason for the delay (internal note)</label>
+              <select id="waitReason">
+                <option value="">Not recorded</option>
+                <option>Signer not ready</option>
+                <option>Documents incomplete</option>
+                <option>Witness unavailable</option>
+                <option>Facility delay</option>
+                <option>Attorney or title company delay</option>
+                <option>Identification issue</option>
+                <option>Printing delay</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- ---------------- 8. Printing ---------------- -->
+      <details class="qc-section">
+        <summary>Printing and document handling<span class="qc-summary-tag" id="tagPrinting"></span></summary>
+        <div class="qc-body">
+          <div class="qc-grid">
+            <div class="qc-field qc-full">
+              <label for="prMode">Printing type</label>
+              <select id="prMode">
+                <option value="none">No printing required</option>
+                <option value="general">General document printing</option>
+                <option value="loan_one">Loan package, one printed set</option>
+                <option value="loan_two">Loan package, signing set plus borrower copy</option>
+              </select>
+              <span class="qc-hint">General: $10.00 for the first 20 pages, then $0.25 per page. Loan: $25.00 for one set or $40.00 for two, up to 150 pages per set, then $0.25 per page per set.</span>
+            </div>
+            <div class="qc-field"><label for="prPages">Page count (per set for loan packages)</label><input type="number" id="prPages" min="0" step="1" value="0" inputmode="numeric"></div>
+            <div class="qc-field"><label for="prScan">Scanback pages</label><input type="number" id="prScan" min="0" step="1" value="0" inputmode="numeric">
+              <span class="qc-hint">Up to 50 pages: $15.00. Over 50: $25.00. Selected automatically.</span></div>
+            <div class="qc-field"><label for="prCourierStops">Additional courier stops</label><input type="number" id="prCourierStops" min="0" step="1" value="0" inputmode="numeric"></div>
+            <div class="qc-field"><label for="prCustom">Custom document handling charge</label><input type="number" id="prCustom" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field qc-full"><label for="prDropLocation">Drop off location</label>
+              <select id="prDropLocation">
+                <option value="">Not applicable</option>
+                <option>FedEx</option><option>UPS</option><option>USPS</option>
+                <option>Attorney's office</option><option>Title company</option><option>Other location</option>
+              </select>
+            </div>
+          </div>
+          <div class="qc-checkgrid">
+            <label class="qc-check"><input type="checkbox" id="prFaxbacks"><span>Faxbacks ($15.00)</span></label>
+            <label class="qc-check"><input type="checkbox" id="prShippingLabel"><span>Shipping label printing (included)</span></label>
+            <label class="qc-check"><input type="checkbox" id="prCarrierDropOff"><span>Standard carrier drop off after a loan signing (included)</span></label>
+            <label class="qc-check"><input type="checkbox" id="prCourierOnly"><span>Separate courier only drop off ($40.00 plus excess mileage)</span></label>
+            <label class="qc-check"><input type="checkbox" id="prEmailDocs"><span>Email completed documents (included)</span></label>
+            <label class="qc-check"><input type="checkbox" id="prPackaging"><span>Document packaging (included)</span></label>
+            <label class="qc-check"><input type="checkbox" id="prDocPickup"><span>Document pickup ($40.00)</span></label>
+            <label class="qc-check"><input type="checkbox" id="prDocReturn"><span>Document return ($40.00)</span></label>
+          </div>
+        </div>
+      </details>
+
+      <!-- ---------------- 9. Witnesses ---------------- -->
+      <details class="qc-section">
+        <summary>Witness services<span class="qc-summary-tag" id="tagWitness"></span></summary>
+        <div class="qc-body">
+          <div class="qc-checkgrid">
+            <label class="qc-check"><input type="checkbox" id="witClientProvides" checked><span>Client provides all witnesses</span></label>
+            <label class="qc-check"><input type="checkbox" id="witFacilityProvides"><span>Facility provides witness</span></label>
+            <label class="qc-check"><input type="checkbox" id="witCoordination"><span>Witness coordination required</span></label>
+          </div>
+          <div class="qc-grid">
+            <div class="qc-field"><label for="witCustom">Custom witness charge</label><input type="number" id="witCustom" min="0" step="0.01" inputmode="decimal" value="0"></div>
+          </div>
+          <p class="qc-note qc-note-warn">Witness availability is not guaranteed until confirmed. Set the number of witnesses you must provide in the documents and signers section.</p>
+        </div>
+      </details>
+
+      <!-- ---------------- 10. Apostille ---------------- -->
+      <details class="qc-section" id="apostilleSection">
+        <summary>Apostille details<span class="qc-summary-tag" id="tagApostille"></span></summary>
+        <div class="qc-body">
+          <label class="qc-check"><input type="checkbox" id="apInclude"><span>Include apostille charges on this quote</span></label>
+          <div class="qc-grid">
+            <div class="qc-field"><label for="apDocs">Number of documents</label>
+              <div class="qc-stepper"><button type="button" data-step="apDocs" data-dir="-1" aria-label="Decrease">&minus;</button><input type="number" id="apDocs" min="1" step="1" value="1" inputmode="numeric"><button type="button" data-step="apDocs" data-dir="1" aria-label="Increase">+</button></div>
+            </div>
+            <div class="qc-field"><label for="apDocType">Document type</label><input type="text" id="apDocType" placeholder="Birth certificate, power of attorney, diploma"></div>
+            <div class="qc-field"><label for="apOrigin">State or country of origin</label><input type="text" id="apOrigin" value="Georgia"></div>
+            <div class="qc-field"><label for="apDestCountry">Destination country</label><input type="text" id="apDestCountry"></div>
+            <div class="qc-field qc-full"><label for="apDestType">Destination type</label>
+              <select id="apDestType">
+                <option value="hague">Hague Convention country, apostille through GSCCCA</option>
+                <option value="non_hague">Non Hague country, Great Seal certification through the Secretary of State</option>
+                <option value="unknown">Not yet determined</option>
+              </select>
+            </div>
+            <div class="qc-field"><label for="apShipDom">Domestic return shipping cost</label><input type="number" id="apShipDom" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="apShipIntl">International return shipping cost</label><input type="number" id="apShipIntl" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="apCourierCost">Courier cost</label><input type="number" id="apCourierCost" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="apCountyCost">County authentication cost</label><input type="number" id="apCountyCost" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="apEmbassyCost">Embassy or consulate cost</label><input type="number" id="apEmbassyCost" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="apThirdParty">Other third party cost</label><input type="number" id="apThirdParty" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="apCertifiedCost">Certified copies cost</label><input type="number" id="apCertifiedCost" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="apTranslationCost">Translation cost</label><input type="number" id="apTranslationCost" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="apProcessing">Processing speed</label>
+              <select id="apProcessing"><option>Standard processing</option><option>Expedited processing</option><option>Same day courier, when available</option></select>
+            </div>
+            <div class="qc-field"><label for="apShipMethod">Shipping method</label>
+              <select id="apShipMethod"><option value="">Not selected</option><option>USPS</option><option>FedEx</option><option>UPS</option><option>Client arranges</option><option>Client pickup</option></select>
+            </div>
+          </div>
+          <div class="qc-checkgrid">
+            <label class="qc-check"><input type="checkbox" id="apOriginalAvailable" checked><span>Original document is available</span></label>
+            <label class="qc-check"><input type="checkbox" id="apCertifiedCopy"><span>Certified copy required</span></label>
+            <label class="qc-check"><input type="checkbox" id="apNotarizeBefore"><span>Notarization required before processing</span></label>
+            <label class="qc-check"><input type="checkbox" id="apCountyAuth"><span>County authentication required</span></label>
+            <label class="qc-check"><input type="checkbox" id="apFederalAuth"><span>Federal authentication required</span></label>
+            <label class="qc-check"><input type="checkbox" id="apEmbassy"><span>Embassy or consulate legalization required</span></label>
+            <label class="qc-check"><input type="checkbox" id="apTranslation"><span>Translation required</span></label>
+            <label class="qc-check"><input type="checkbox" id="apPickup"><span>Document pickup</span></label>
+            <label class="qc-check"><input type="checkbox" id="apDropoff"><span>Document drop off</span></label>
+            <label class="qc-check"><input type="checkbox" id="apRush"><span>Rush handling</span></label>
+            <label class="qc-check"><input type="checkbox" id="apClientPaysOutside"><span>Client pays outside costs directly</span></label>
+          </div>
+          <p class="qc-note qc-note-warn">Apostille and authentication processing times are estimates. They can be affected by government agencies, holidays, document condition, destination country requirements, and shipping providers. Not every document is eligible for an apostille.</p>
+        </div>
+      </details>
+
+      <!-- ---------------- 11. Loan signing ---------------- -->
+      <details class="qc-section" id="loanSection">
+        <summary>Attorney supervised loan signing<span class="qc-summary-tag" id="tagLoan"></span></summary>
+        <div class="qc-body">
+          <p class="qc-note qc-note-legal">Georgia is an attorney closing state. This calculator does not authorize an independent real estate closing. Confirm attorney supervision before accepting or performing a Georgia loan signing assignment.</p>
+          <div class="qc-checkgrid">
+            <label class="qc-check"><input type="checkbox" id="loanConfirmed"><span><strong>Attorney supervision confirmed in writing</strong></span></label>
+            <label class="qc-check"><input type="checkbox" id="loanPending"><span>Quote pending attorney supervision confirmation</span></label>
+          </div>
+          <div class="qc-grid">
+            <div class="qc-field"><label for="loanAttorney">Attorney or law firm</label><input type="text" id="loanAttorney"></div>
+            <div class="qc-field"><label for="loanTitleCo">Title or signing company</label><input type="text" id="loanTitleCo"></div>
+            <div class="qc-field"><label for="loanPages">Package page count</label><input type="number" id="loanPages" min="0" step="1" value="0" inputmode="numeric"></div>
+            <div class="qc-field"><label for="loanAddlSigners">Additional signers</label><input type="number" id="loanAddlSigners" min="0" step="1" value="0" inputmode="numeric"></div>
+            <div class="qc-field"><label for="loanAddlProps">Additional properties</label><input type="number" id="loanAddlProps" min="0" step="1" value="0" inputmode="numeric"></div>
+            <div class="qc-field"><label for="loanLength">Estimated appointment length (minutes)</label><input type="number" id="loanLength" min="0" step="15" value="60" inputmode="numeric"></div>
+            <div class="qc-field"><label for="loanNegotiated">Custom negotiated fee</label><input type="number" id="loanNegotiated" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="loanSigningLocation">Signing location</label><input type="text" id="loanSigningLocation"></div>
+          </div>
+          <div class="qc-checkgrid">
+            <label class="qc-check"><input type="checkbox" id="loanCombo"><span>Seller and buyer combination</span></label>
+            <label class="qc-check"><input type="checkbox" id="loanTrustPoa"><span>Trust or power of attorney documents</span></label>
+            <label class="qc-check"><input type="checkbox" id="loanFaxbacks"><span>Faxbacks required</span></label>
+            <label class="qc-check"><input type="checkbox" id="loanResign"><span>Re-sign or return trip required</span></label>
+            <label class="qc-check"><input type="checkbox" id="loanNoPrint"><span>No print assignment</span></label>
+            <label class="qc-check"><input type="checkbox" id="loanTable"><span>Table and seating available at the signing location</span></label>
+          </div>
+        </div>
+      </details>
+
+      <!-- ---------------- 12. I-9 ---------------- -->
+      <details class="qc-section" id="i9Section">
+        <summary>I-9 verification<span class="qc-summary-tag" id="tagI9"></span></summary>
+        <div class="qc-body">
+          <p class="qc-note qc-note-info">When performing an I-9 appointment you act as the employer's designated authorized representative. That is not a notarization unless a separate document specifically requires a notarial act.</p>
+          <div class="qc-grid">
+            <div class="qc-field"><label for="i9Employees">Number of employees</label>
+              <div class="qc-stepper"><button type="button" data-step="i9Employees" data-dir="-1" aria-label="Decrease">&minus;</button><input type="number" id="i9Employees" min="1" step="1" value="1" inputmode="numeric"><button type="button" data-step="i9Employees" data-dir="1" aria-label="Increase">+</button></div>
+            </div>
+            <div class="qc-field"><label for="i9SeparateLocations">Separate employee locations</label><input type="number" id="i9SeparateLocations" min="0" step="1" value="0" inputmode="numeric"></div>
+            <div class="qc-field qc-full"><label for="i9Employer">Employer name</label><input type="text" id="i9Employer"></div>
+          </div>
+          <div class="qc-checkgrid">
+            <label class="qc-check"><input type="checkbox" id="i9InPerson" checked><span>In person authorized representative service</span></label>
+            <label class="qc-check"><input type="checkbox" id="i9Portal"><span>Employer platform or portal required</span></label>
+            <label class="qc-check"><input type="checkbox" id="i9Upload"><span>Document upload required</span></label>
+            <label class="qc-check"><input type="checkbox" id="i9Printing"><span>Printing required</span></label>
+            <label class="qc-check"><input type="checkbox" id="i9Rush"><span>Same day or rush request</span></label>
+            <label class="qc-check"><input type="checkbox" id="i9BusinessRate"><span>Apply custom business account rate</span></label>
+          </div>
+        </div>
+      </details>
+
+      <!-- ---------------- 13. Discounts ---------------- -->
+      <details class="qc-section">
+        <summary>Discounts and adjustments<span class="qc-summary-tag" id="tagDiscounts"></span></summary>
+        <div class="qc-body">
+          <div class="qc-checkgrid" id="discountChecks"></div>
+          <div class="qc-grid">
+            <div class="qc-field"><label for="adjIncrease">Manual fee increase</label><input type="number" id="adjIncrease" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="adjReduction">Manual fee reduction</label><input type="number" id="adjReduction" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="adjCustom">Custom adjustment (may be negative)</label><input type="number" id="adjCustom" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field"><label for="depositPaid">Deposit already paid</label><input type="number" id="depositPaid" min="0" step="0.01" inputmode="decimal" value="0"></div>
+            <div class="qc-field qc-full"><label for="adjReason">Reason for the override (required for any manual change)</label><input type="text" id="adjReason"></div>
+            <div class="qc-field qc-full"><label for="overrideTotal">Replace the calculated total entirely (optional)</label><input type="number" id="overrideTotal" min="0" step="0.01" inputmode="decimal" placeholder="Leave blank to use the calculated total"></div>
+          </div>
+          <label class="qc-check"><input type="checkbox" id="overrideMinimum"><span>Allow this quote to fall below the minimum trip charge</span></label>
+          <label class="qc-check" id="cardAdjWrap" hidden><input type="checkbox" id="applyCardAdjustment"><span>Apply the card processing adjustment to this quote</span></label>
+        </div>
+      </details>
+
+      <!-- ---------------- 14. Cancellation ---------------- -->
+      <details class="qc-section">
+        <summary>Cancellation, no show or return trip<span class="qc-summary-tag" id="tagCancel"></span></summary>
+        <div class="qc-body">
+          <label class="qc-check"><input type="checkbox" id="cancellationOnly"><span><strong>Quote a cancellation or trip charge only.</strong> This replaces the appointment quote entirely.</span></label>
+          <div class="qc-grid qc-1">
+            <div class="qc-field"><label for="cancellationType">Reason</label><select id="cancellationType"></select></div>
+          </div>
+        </div>
+      </details>
+
+      <!-- ---------------- 15. Payment ---------------- -->
+      <details class="qc-section">
+        <summary>Payment</summary>
+        <div class="qc-body">
+          <div class="qc-grid">
+            <div class="qc-field"><label for="payMethod">Payment method</label><select id="payMethod"></select></div>
+            <div class="qc-field"><label for="payTerms">Payment terms</label><select id="payTerms"></select></div>
+            <div class="qc-field"><label for="depositRequired">Deposit required for this appointment</label><input type="number" id="depositRequired" min="0" step="0.01" inputmode="decimal" value="0"></div>
+          </div>
+          <label class="qc-check"><input type="checkbox" id="includeChecklist" checked><span>Include the client preparation checklist on the written quote</span></label>
+          <p class="qc-note qc-note-warn">Never record card numbers, account numbers, or any other payment credentials in this tool.</p>
+        </div>
+      </details>
+
+    </form>
+
+    <!-- ---------------- Result ---------------- -->
+    <div id="qcBlocked"></div>
+    <div id="qcIncomplete"></div>
+
+    <div class="qc-result" id="qcResult" aria-live="polite"></div>
+
+    <div class="qc-actions qc-noprint">
+      <button class="btn btn-purple" type="button" id="btnRecalc">Recalculate</button>
+      <button class="btn btn-gold" type="button" id="btnSave">Save quote</button>
+      <button class="btn btn-ghost" type="button" id="btnCopyTotal">Copy total</button>
+      <button class="btn btn-ghost" type="button" id="btnCopyItemized">Copy itemized</button>
+      <button class="btn btn-ghost" type="button" id="btnCopyText">Copy text message</button>
+      <button class="btn btn-ghost" type="button" id="btnCopyEmail">Copy email</button>
+      <button class="btn btn-ghost" type="button" id="btnPrint">Print or save as PDF</button>
+      <button class="btn btn-ghost" type="button" id="btnDuplicate">Duplicate quote</button>
+      <button class="btn btn-ghost btn-danger" type="button" id="btnReset">Reset form</button>
+    </div>
+
+    <details class="qc-section qc-noprint" style="margin-top:1.2rem">
+      <summary>Text message and email drafts</summary>
+      <div class="qc-body">
+        <h4 style="font-family:var(--body);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--purple)">Text message</h4>
+        <div class="qc-output" id="outText"></div>
+        <h4 style="font-family:var(--body);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-top:1.2rem">Email</h4>
+        <div class="qc-output" id="outEmail"></div>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- ==================================================================
+     PANEL 2: SAVED QUOTES
+     ================================================================== -->
+<section class="section section--tight" id="panelSaved" role="tabpanel" aria-labelledby="tabSaved" hidden>
+  <div class="container">
+    <h2 class="section-title" style="font-size:clamp(1.6rem,4vw,2.2rem)">Saved Quotes</h2>
+    <p class="qc-note qc-note-warn">Quotes are stored only in this browser on this device. Nothing is sent to a server. Clearing your browser data, using a different device, or using private browsing will remove or hide these records. Export a backup regularly.</p>
+    <div class="qc-grid">
+      <div class="qc-field qc-full"><label for="searchSaved">Search by client name, quote number, date, phone or service</label><input type="search" id="searchSaved" placeholder="Type to filter"></div>
+    </div>
+    <div class="qc-actions qc-noprint" style="margin-bottom:1rem">
+      <button class="btn btn-ghost btn-sm" type="button" id="btnExportQuotes">Export quotes as JSON</button>
+      <button class="btn btn-ghost btn-sm btn-danger" type="button" id="btnClearQuotes">Clear all stored quotes</button>
+    </div>
+    <div class="qc-cardlist" id="savedList"></div>
+  </div>
+</section>
+
+<!-- ==================================================================
+     PANEL 3: DASHBOARD
+     ================================================================== -->
+<section class="section section--tight" id="panelDashboard" role="tabpanel" aria-labelledby="tabDashboard" hidden>
+  <div class="container">
+    <h2 class="section-title" style="font-size:clamp(1.6rem,4vw,2.2rem)">Business Dashboard</h2>
+    <p class="section-lead">Built entirely from quotes saved on this device.</p>
+    <div class="qc-statgrid" id="dashStats"></div>
+    <h3 style="margin-top:2rem">Quotes by service type</h3>
+    <div class="qc-cardlist" id="dashByService"></div>
+    <h3 style="margin-top:2rem">Lead sources</h3>
+    <div class="qc-cardlist" id="dashBySource"></div>
+  </div>
+</section>
+
+<!-- ==================================================================
+     PANEL 4: ADMIN PRICING PANEL
+     ================================================================== -->
+<section class="section section--tight" id="panelAdmin" role="tabpanel" aria-labelledby="tabAdmin" hidden>
+  <div class="container">
+    <h2 class="section-title" style="font-size:clamp(1.6rem,4vw,2.2rem)">Pricing Settings</h2>
+    <p class="section-lead">Change a price here and the whole calculator updates. Every fee also has an on and off switch.</p>
+
+    <div class="qc-note qc-note-info">
+      <strong>Where each number came from:</strong>
+      <span class="qc-src qc-src-live">Live</span> your live pricing page.
+      <span class="qc-src qc-src-derived">Derived</span> reasoned from a live price, confirm it.
+      <span class="qc-src qc-src-gov">Gov</span> a published government fee, not your income.
+      <span class="qc-src qc-src-review">Review</span> no established price found, set it yourself.
+    </div>
+
+    <div class="qc-grid">
+      <div class="qc-field"><label for="cfgVersion">Pricing schedule version</label><input type="text" id="cfgVersion"></div>
+      <div class="qc-field"><label for="cfgEffective">Effective date</label><input type="date" id="cfgEffective"></div>
+      <div class="qc-field"><label for="cfgExpiry">Quote expiration (days)</label><input type="number" id="cfgExpiry" min="1" step="1"></div>
+      <div class="qc-field qc-full"><label for="cfgHomeBase">Home base or starting address (stored on this device only)</label><input type="text" id="cfgHomeBase"></div>
+    </div>
+
+    <div class="qc-note qc-note-legal" id="statutoryPolicyNotice">
+      <strong>First $2 statutory notarial fee.</strong> This is deliberately unset. The calculator
+      will not produce a total until you choose how the first statutory act is treated.
+    </div>
+    <div class="qc-grid">
+      <div class="qc-field qc-full">
+        <label for="cfgFirstAct">First $2 statutory notarial fee</label>
+        <select id="cfgFirstAct">
+          <option value="">Not yet chosen, quotes are blocked</option>
+          <option value="included">Included in the base appointment price</option>
+          <option value="added">Added separately to the base appointment price</option>
+        </select>
+        <span class="qc-hint">Your $65 base includes one notarial act. Choosing "added" produces $67 for a one act appointment. Choosing "included" produces $65.</span>
+      </div>
+    </div>
+
+    <div class="qc-field qc-full" style="margin-top:1rem">
+      <label for="rateFilter">Show rates</label>
+      <select id="rateFilter">
+        <option value="all">All rates</option>
+        <option value="needs_approval">Needs approval (proposed)</option>
+        <option value="custom_required">Custom quote required</option>
+        <option value="approved">Approved (internal)</option>
+        <option value="published">Published and approved</option>
+      </select>
+    </div>
+
+    <div class="qc-actions qc-noprint">
+      <button class="btn btn-gold" type="button" id="btnSaveConfig">Save pricing settings</button>
+      <button class="btn btn-ghost" type="button" id="btnExportConfig">Export pricing as JSON</button>
+      <button class="btn btn-ghost" type="button" id="btnImportConfig">Import pricing JSON</button>
+      <button class="btn btn-ghost btn-danger" type="button" id="btnResetConfig">Restore shipped defaults</button>
+      <input type="file" id="importFile" accept="application/json,.json" aria-label="Choose a pricing JSON file to import" hidden>
+    </div>
+
+    <div id="adminBody" style="margin-top:1.6rem"></div>
+
+    <details class="qc-section" style="margin-top:1.6rem">
+      <summary>Editable disclaimers</summary>
+      <div class="qc-body" id="adminDisclaimers"></div>
+    </details>
+
+    <details class="qc-section">
+      <summary>Items flagged for your legal review</summary>
+      <div class="qc-body" id="adminLegal"></div>
+    </details>
+  </div>
+</section>
+
+</main>
+
+<div class="qc-sticky qc-noprint">
+  <div>
+    <div class="qc-sticky-label">Estimated total</div>
+    <div class="qc-sticky-amt" id="stickyTotal">$0.00</div>
+  </div>
+  <button class="btn btn-gold" type="button" id="btnStickyCopy">Copy text quote</button>
+</div>
+
+<div class="qc-toast" id="qcToast" role="status" aria-live="polite"></div>
+
+<!-- Same footer as the public site. -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <picture><source srcset="assets/images/logo-hero.webp" type="image/webp"><img src="assets/images/logo-hero.png" alt="Anytime Anywhere Mobile Notary Services LLC logo" width="150" height="100" loading="lazy" decoding="async"></picture>
+        <p>Professional Mobile Notary &amp; Signing Services Specialist serving individuals, families, professionals, and organizations throughout Metro Atlanta, Georgia.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="service-areas.html">Service Areas</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="faq.html">FAQs</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="tel:+17204001522">720-400-1522</a></li>
+          <li><a href="sms:+17204001522">Text to book</a></li>
+          <li><a href="mailto:malika@anytimenotarize.com">malika@anytimenotarize.com</a></li>
+          <li>Metro Atlanta, Georgia</li>
+          <li>Mobile service by appointment</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="footer-disclaimer">Anytime Anywhere Mobile Notary Services LLC is not a law firm and does not provide legal advice, prepare legal documents, select legal forms, or explain the legal effect of documents. Signers should consult a licensed attorney regarding legal questions. Notarial services are subject to identification, willingness, awareness, document completeness, and all applicable Georgia laws. Website requests do not constitute confirmed appointments.</p>
+
+    <div class="footer-bottom">
+      <span>&copy; <span data-year>2026</span> Anytime Anywhere Mobile Notary Services LLC. All rights reserved.</span>
+      <span>
+        <a href="privacy.html">Privacy Policy</a> &nbsp;&middot;&nbsp;
+        <a href="terms.html">Terms &amp; Conditions</a> &nbsp;&middot;&nbsp;
+        <a href="privacy.html#accessibility">Accessibility</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/script.js" defer></script>
+<script src="assets/js/pricing-config.js"></script>
+<script src="assets/js/quote-engine.js"></script>
+<script src="assets/js/quote-calculator.js" defer></script>
+</body>
+</html>
