@@ -97,6 +97,34 @@
     document.body.removeChild(ta);
   }
 
+  /* Run a DOM rebuild without stealing the caret or moving the page. */
+  function preserveUI(fn) {
+    var doc = document;
+    var active = doc.activeElement;
+    var id = active && active.id ? active.id : null;
+    var selStart = null, selEnd = null;
+    try {
+      if (active && typeof active.selectionStart === "number") {
+        selStart = active.selectionStart; selEnd = active.selectionEnd;
+      }
+    } catch (e) { /* number and date inputs throw, ignore */ }
+    var scrollY = window.pageYOffset || doc.documentElement.scrollTop || 0;
+
+    fn();
+
+    if (id) {
+      var el = doc.getElementById(id);
+      if (el && el !== doc.activeElement) {
+        try { el.focus({ preventScroll: true }); } catch (e2) { el.focus(); }
+        if (selStart !== null) {
+          try { el.setSelectionRange(selStart, selEnd); } catch (e3) { /* unsupported type */ }
+        }
+      }
+    }
+    var nowY = window.pageYOffset || doc.documentElement.scrollTop || 0;
+    if (Math.abs(nowY - scrollY) > 1) { window.scrollTo(0, scrollY); }
+  }
+
   function val(id) { var el = $(id); return el ? el.value : ""; }
   function numVal(id) {
     var v = parseFloat(val(id));
@@ -427,12 +455,14 @@
       CURRENT_CREATED = new Date();
     }
 
-    renderBlocked(result);
-    renderIncomplete(result);
-    renderResult(result);
-    renderDrafts(result);
-    updateTags(result);
-    applyOutputGate(result);
+    preserveUI(function () {
+      renderBlocked(result);
+      renderIncomplete(result);
+      renderResult(result);
+      renderDrafts(result);
+      updateTags(result);
+      applyOutputGate(result);
+    });
 
     if (result.blocked) { $("stickyTotal").textContent = "On hold"; }
     else if (result.completeness === "unavailable") { $("stickyTotal").textContent = "Unavailable"; }
@@ -458,8 +488,20 @@
 
   /* The incomplete panel lists every blocking item and lets you type an
      amount for this one appointment without changing your rate sheet. */
+  var LAST_INCOMPLETE_SIG = null;
+
   function renderIncomplete(r) {
     var el = $("qcIncomplete");
+
+    /* Rebuilding this panel destroys any custom rate input the user is
+       typing in, so only rebuild when its contents actually change. */
+    var sig = r.blocked ? "blocked" :
+      r.completeness + "|" +
+      r.missing.map(function (m) { return m.path; }).join(",") + "|" +
+      r.proposed.map(function (pp) { return pp.path; }).join(",");
+    if (sig === LAST_INCOMPLETE_SIG) { return; }
+    LAST_INCOMPLETE_SIG = sig;
+
     if (r.blocked) { el.innerHTML = ""; return; }
 
     var html = "";
@@ -1195,17 +1237,28 @@
   /* =========================================================
      FORM BEHAVIOUR
      ========================================================= */
-  function syncVisibility() {
+  var LAST_SERVICE_KEY = null;
+
+  /* syncVisibility never runs on plain typing. It runs only when a
+     select, checkbox or radio changes, and it only forces an accordion
+     open or closed when the SERVICE selection itself changed. Forcing
+     .open on every keystroke was collapsing the section being typed in. */
+  function syncVisibility(opts) {
     var svcKey = val("service");
     var svc = CFG.services[svcKey] || {};
+    var serviceChanged = (svcKey !== LAST_SERVICE_KEY);
+    var allowToggles = !(opts && opts.typingOnly);
 
     $("customServiceWrap").hidden = !(svc.status === "custom_required" || svc.pricingMode === "custom");
     $("customServiceLabelWrap").hidden = !(svcKey === "custom_service");
 
-    $("loanSection").open = !!svc.loan;
-    $("i9Section").open = svcKey === "i9";
-    $("apostilleSection").open = svcKey.indexOf("apostille") === 0;
-    if (svcKey.indexOf("apostille") === 0 && !checked("apInclude")) { $("apInclude").checked = true; }
+    if (serviceChanged && allowToggles) {
+      $("loanSection").open = !!svc.loan;
+      $("i9Section").open = svcKey === "i9";
+      $("apostilleSection").open = svcKey.indexOf("apostille") === 0;
+      if (svcKey.indexOf("apostille") === 0 && !checked("apInclude")) { $("apInclude").checked = true; }
+      LAST_SERVICE_KEY = svcKey;
+    }
 
     var mode = val("travelMode");
     $("zoneWrap").hidden = mode !== "zone";
@@ -1213,12 +1266,13 @@
     $("customTravelWrap").hidden = mode !== "custom";
     $("travelMeasurement").disabled = (mode === "miles");
 
-    /* Attorney supervision checkboxes are mutually exclusive. */
-    if (checked("loanConfirmed") && checked("loanPending")) { $("loanPending").checked = false; }
-
-    /* Witness helpers. */
-    if (checked("witClientProvides") && intVal("cntWitnessProv") > 0) {
-      $("witClientProvides").checked = false;
+    if (allowToggles) {
+      /* Attorney supervision checkboxes are mutually exclusive. */
+      if (checked("loanConfirmed") && checked("loanPending")) { $("loanPending").checked = false; }
+      /* Witness helpers. */
+      if (checked("witClientProvides") && intVal("cntWitnessProv") > 0) {
+        $("witClientProvides").checked = false;
+      }
     }
 
     var hint = $("serviceHint");
@@ -1273,6 +1327,8 @@
     CURRENT_QUOTE_NO = null;
     CURRENT_CREATED = null;
     CUSTOM_RATES = {};
+    LAST_SERVICE_KEY = null;
+    LAST_INCOMPLETE_SIG = null;
     $("travelMeasurement").value = CFG.travel.measurement;
     $("waitIncluded").value = CFG.rules.includedMinutes.amount;
     syncVisibility();
@@ -1304,12 +1360,24 @@
 
     /* Recalculate on any change, throttled so typing stays smooth. */
     var timer = null;
-    function schedule() {
+    function schedule(typingOnly) {
       window.clearTimeout(timer);
-      timer = window.setTimeout(function () { syncVisibility(); recalc(); }, 120);
+      timer = window.setTimeout(function () {
+        syncVisibility({ typingOnly: !!typingOnly });
+        recalc();
+      }, typingOnly ? 250 : 90);
     }
-    $("qcForm").addEventListener("input", schedule);
-    $("qcForm").addEventListener("change", schedule);
+
+    /* Typing only recalculates. It never re-evaluates accordion state. */
+    $("qcForm").addEventListener("input", function () { schedule(true); });
+
+    /* A select, checkbox or radio change may legitimately open or close
+       a section, so those get the full visibility pass. */
+    $("qcForm").addEventListener("change", function (e) {
+      var t = e.target;
+      var structural = t && (t.tagName === "SELECT" || t.type === "checkbox" || t.type === "radio");
+      schedule(!structural);
+    });
 
     setupSteppers();
     setupTabs();
@@ -1356,11 +1424,7 @@
       if (v === "" || isNaN(parseFloat(v))) { delete CUSTOM_RATES[path]; }
       else { CUSTOM_RATES[path] = parseFloat(v); }
       window.clearTimeout(window._crTimer);
-      window._crTimer = window.setTimeout(function () {
-        recalc();
-        var again = $("qcIncomplete").querySelector('[data-customrate="' + path + '"]');
-        if (again) { again.focus(); }
-      }, 400);
+      window._crTimer = window.setTimeout(recalc, 300);
     });
 
     $("btnSaveConfig").addEventListener("click", saveAdmin);

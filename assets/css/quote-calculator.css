@@ -164,6 +164,8 @@
 .qc-total-row.qc-balance { font-weight: 700; color: var(--purple-deep); font-size: 1.1rem; }
 
 /* -------------------- Sticky mobile total -------------------- */
+/* Desktop: the bar sticks to the bottom of the viewport.
+   Mobile overrides this entirely, see the mobile block near the end. */
 .qc-sticky {
   position: sticky; bottom: 0; z-index: 45;
   background: var(--ink); color: #fff;
@@ -271,6 +273,40 @@
 
 @media (max-width: 380px) {
   .qc-actions { grid-template-columns: 1fr; }
+}
+
+/* -------------------- Mobile: no floating total bar --------------------
+   On phones a sticky bottom bar is repositioned every time the URL bar
+   collapses, the on-screen keyboard opens, or the visual viewport
+   resizes, which made the bar drift up the screen mid scroll. On mobile
+   the bar sits in normal document flow at the end of the calculator
+   instead, so it never moves and never covers a field or a button. */
+@media (max-width: 900px) {
+  .qc-sticky {
+    position: static;
+    inset: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    box-shadow: none;
+    border-top: 2px solid var(--gold);
+    border-bottom: 2px solid var(--gold);
+    margin-top: 1.2rem;
+    /* Breathing room under the last control, plus the home indicator.
+       The plain value lands first so browsers without env() still get
+       the spacing rather than dropping the declaration entirely. */
+    padding-bottom: 1rem;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* The toast was offset to clear the floating bar. It no longer needs to. */
+  .qc-toast {
+    bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* The tab strip stays put; only the total bar changes. */
+  main { padding-bottom: 0; }
 }
 
 /* -------------------- Print / save as PDF -------------------- */
