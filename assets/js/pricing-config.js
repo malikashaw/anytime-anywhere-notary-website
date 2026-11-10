@@ -149,7 +149,7 @@
       early_morning: R("Early morning, 6:00 a.m. through 8:00 a.m.", 0, APPR, AP,
                        "Minimum base becomes $85.00.",
                        { tierBase: 85, premium: 0 }),
-      evening:       R("Evening", 0, PUB, LP, "Minimum base becomes $85.",
+      evening:       R("Evening (5 PM and later)", 0, PUB, LP, "Minimum base becomes $85.",
                        { tierBase: 85, premium: 0 }),
       saturday:      R("Saturday", 0, PUB, LP, "Minimum base becomes $95.",
                        { tierBase: 95, premium: 0 }),

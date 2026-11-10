@@ -66,6 +66,7 @@
     CFG.rules.statutoryFirstActTreatment = "added";
     CFG.rules.includedActs.amount = 0;
     CFG.rules.statutoryActFee.amount = 2;
+    CFG.timing.evening.label = window.PRICING_CONFIG.timing.evening.label;
     CFG.timing.holiday = deepClone(window.PRICING_CONFIG.timing.holiday);
     CFG.timing.major_holiday = deepClone(window.PRICING_CONFIG.timing.major_holiday);
   }
