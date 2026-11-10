@@ -472,7 +472,7 @@
     var gQty = new Group("4. Documents, signers and acts");
     var extraActs = Math.max(0, acts - includedActs);
     if (extraActs > 0) {
-      gQty.addAlways(extraActs + " additional notarial act" + (extraActs > 1 ? "s" : "") +
+      gQty.add(extraActs + " additional notarial act" + (extraActs > 1 ? "s" : "") +
                      " beyond the " + includedActs + " included",
                      extraActs * ctx.use(c.quantities.additionalAct,
                                          "quantities.additionalAct", "Documents section"));
