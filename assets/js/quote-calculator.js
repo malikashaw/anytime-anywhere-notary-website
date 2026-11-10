@@ -63,6 +63,11 @@
 
   function loadConfig() {
     CFG = mergeConfig(deepClone(window.PRICING_CONFIG), safeGet(STORE_CONFIG, null));
+    CFG.rules.statutoryFirstActTreatment = "added";
+    CFG.rules.includedActs.amount = 0;
+    CFG.rules.statutoryActFee.amount = 2;
+    CFG.timing.holiday = deepClone(window.PRICING_CONFIG.timing.holiday);
+    CFG.timing.major_holiday = deepClone(window.PRICING_CONFIG.timing.major_holiday);
   }
 
   /* =========================================================

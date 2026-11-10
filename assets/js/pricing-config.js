@@ -63,19 +63,19 @@
     rules: {
       timingTierActsAsFloor: true,
 
-      /* The $65 base already contains the first notarial act. */
-      statutoryFirstActTreatment: "included",
+      /* Notarial acts are charged separately from optional mobile travel. */
+      statutoryFirstActTreatment: "added",
 
       minimumTripCharge: R("Minimum trip charge", 65, APPR, AP,
         "Matches the standard weekday base."),
 
       statutoryActFee: R("Georgia notarial act fee (per act)", 2, PUB, LP,
-        "First act is inside the base. Each additional act is $2."),
+        "Every completed notarial act is $2, billed separately."),
 
       includedMinutes: R("Included appointment time (minutes)", 15, PUB, LP,
         "Waiting time starts after this."),
 
-      includedActs: R("Notarial acts included in base", 1, PUB, LP, ""),
+      includedActs: R("Notarial acts included in base", 0, PUB, LP, ""),
 
       tax: R("Tax rate (percent)", 0, CUSTOM, "Not determined",
         "Off. Confirm with your accountant.", { enabled: false }),
@@ -87,7 +87,7 @@
     /* ---------------- SERVICES ---------------- */
     services: {
       general_mobile: SVC("General mobile notarization", 65, PUB, LP,
-        "Includes the first notarial act, up to 15 one way miles, and up to 15 minutes."),
+        "Includes up to 15 one way miles and up to 15 minutes; notarial acts are separate."),
 
       estate_docs: SVC("Estate document appointment", 0, APPR,
         "Uses the general mobile notarization price", "Priced at the general mobile base.",
@@ -99,14 +99,14 @@
         "Uses the general mobile notarization price", "Priced at the general mobile base.",
         { pricingMode: "use_general", aliasOf: "general_mobile" }),
 
-      hospital:        SVC("Hospital notarization", 125, PUB, LP, "Includes first act and 15 included miles."),
-      nursing_home:    SVC("Nursing home notarization", 125, PUB, LP, "Includes first act and 15 included miles."),
-      assisted_living: SVC("Assisted living notarization", 125, PUB, LP, "Includes first act and 15 included miles."),
-      hospice:         SVC("Hospice or bedside notarization", 125, PUB, LP, "Includes first act and 15 included miles."),
-      rehab_facility:  SVC("Rehabilitation facility notarization", 125, PUB, LP, "Includes first act and 15 included miles."),
+      hospital:        SVC("Hospital notarization", 125, PUB, LP, "Includes 15 included miles; notarial acts are separate."),
+      nursing_home:    SVC("Nursing home notarization", 125, PUB, LP, "Includes 15 included miles; notarial acts are separate."),
+      assisted_living: SVC("Assisted living notarization", 125, PUB, LP, "Includes 15 included miles; notarial acts are separate."),
+      hospice:         SVC("Hospice or bedside notarization", 125, PUB, LP, "Includes 15 included miles; notarial acts are separate."),
+      rehab_facility:  SVC("Rehabilitation facility notarization", 125, PUB, LP, "Includes 15 included miles; notarial acts are separate."),
 
       jail_visit:      SVC("Jail or detention center visit", 150, APPR, AP,
-                          "Includes first act and 15 included miles."),
+                          "Includes 15 included miles; notarial acts are separate."),
 
       i9:              SVC("I-9 authorized representative", 75, PUB, LP,
                           "First employee. Portal upload included."),
@@ -155,8 +155,10 @@
                        { tierBase: 95, premium: 0 }),
       sunday:        R("Sunday", 0, PUB, LP, "Minimum base becomes $95.",
                        { tierBase: 95, premium: 0 }),
-      holiday:       R("Holiday", 0, APPR, AP, "Minimum base becomes $125.",
+      holiday:       R("Regular holiday", 0, APPR, AP, "Minimum base becomes $125.",
                        { tierBase: 125, premium: 0 }),
+      major_holiday: R("Major holiday (Thanksgiving, Christmas, New Year’s Day)", 0, APPR, AP, "Minimum base becomes $150.",
+                       { tierBase: 150, premium: 0 }),
       late_night:    R("Late night, after 10 p.m.", 0, APPR, AP, "Minimum base becomes $125.",
                        { tierBase: 125, premium: 0 }),
       overnight:     R("Overnight, 12:00 a.m. through 5:59 a.m.", 0, APPR, AP, "Minimum base becomes $150.",
